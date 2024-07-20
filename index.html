@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPA入力ツール</title>
+    <style>
+        #inputArea {
+            width: 80%;
+            height: 100px;
+            margin: 20px auto;
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 200px;
+            margin: 20px auto;
+            gap: 10px;
+        }
+        .key {
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <textarea id="inputArea" placeholder="ここにIPA記号を入力します..."></textarea>
+    <div id="keypad">
+        <div class="key" onclick="insertSymbol('1')">1</div>
+        <div class="key" onclick="insertSymbol('2')">2</div>
+        <div class="key" onclick="insertSymbol('3')">3</div>
+        <div class="key" onclick="insertSymbol('4')">4</div>
+        <div class="key" onclick="insertSymbol('5')">5</div>
+        <div class="key" onclick="insertSymbol('6')">6</div>
+        <div class="key" onclick="insertSymbol('7')">7</div>
+        <div class="key" onclick="insertSymbol('8')">8</div>
+        <div class="key" onclick="insertSymbol('9')">9</div>
+        <div class="key" onclick="insertSymbol('0')">0</div>
+    </div>
+    <button onclick="copyText()">コピー</button>
+
+    <script>
+        const ipaSymbols = {
+            'a': 'a', // 例: '1' -> 'ɑ'
+          　'a': 'ɑ', // 例: '1' -> 'ɑ
+            'a': 'ɒ', // 例: '1' -> 'ɑ
+            'a': 'æ', // 例: '1' -> 'ɑ
+            'a': 'ɐ', // 例: '1' -> 'ɑ
+            'e': 'ɛ',
+            'i': 'ɪ',
+            'o': 'ɔ',
+            'u': 'ʊ',
+            'e': 'ə',
+            't': 'θ',
+            'd': 'ð',
+            's': 'ʃ',
+            'n': 'ŋ'
+            // 必要に応じて他のキーを追加
+        };
+
+        function insertSymbol(key) {
+            const inputArea = document.getElementById('inputArea');
+            inputArea.value += ipaSymbols[key] || key;
+        }
+
+        function copyText() {
+            const inputArea = document.getElementById('inputArea');
+            inputArea.select();
+            document.execCommand('copy');
+            alert('コピーしました');
+        }
+    </script>
+</body>
+</html>
