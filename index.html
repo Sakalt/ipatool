@@ -1,99 +1,344 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPA入力ツール</title>
-    <style>
-        #inputArea {
-            width: 80%;
-            height: 100px;
-            margin: 20px auto;
-            display: block;
-            padding: 10px;
-            font-size: 16px;
-        }
-        #keypad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            max-width: 200px;
-            margin: 20px auto;
-            gap: 10px;
-        }
-        .key {
-            border: 1px solid #ccc;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            user-select: none;
-            font-size: 18px;
-        }
-        button {
-            background-color: #c4c4c4; /* ボタンの背景色を指定 */
-            border: none; /* ボタンの境界線をなしに設定 */
-            color: #000; /* ボタンの文字色を指定 */
-            padding: 10px 20px; /* ボタンの内側の余白を指定 */
-            text-align: center; /* テキストの中央揃え */
-            text-decoration: none; /* テキストの下線をなしに設定 */
-            display: inline-block; /* インラインブロックとして表示 */
-            font-size: 16px; /* フォントサイズを指定 */
-          　margin: 4px 2px; /* ボタンの外側の余白を指定 */
-          　cursor: pointer; /* マウスカーソルをポインターに設定 */
-           border-radius: 5px; /* ボタンの角を丸くする */
-               }
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
+<html lang="ja">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta http-equiv="Content-Style-Type" content="text/css">
+		<meta http-equiv="Content-Script-Type" content="text/javascript">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<link rel="contents" href="/info.html">
+		<link rel="copyright" href="/info.html#copyright">
+		<link rel="author" href="/profile.html">
+		<link rel="search" href="/info.html#search">
+		<link rev="made" href="mailto:matsumomushi@gmail.com">
+		<link rel="alternate" type="application/rss+xml" title="RSS 1.0" href="/rss.rdf">
+		<title>国際音声記号 (IPA) キーボード UUSI</title>
+<style type="text/css">
+<!--
+body {
+	margin:0px;
+	font-size:14pt;
+	background:#ffffff;
+	color:#000000;
+	font-family:arial, sans-serif;
+}
 
-/* ホバー時のスタイルも追加することができます */
-         button:hover {
-             background-color: #a0a0a0; /* ホバー時の背景色を指定 */
-                      }
-    </style>
-</head>
-<body>
-    <textarea id="inputArea" placeholder="ここにIPA記号を入力します..."></textarea>
-    <div id="keypad">
-        <div class="key" onclick="insertSymbol('a')">1</div>
-        <div class="key" onclick="insertSymbol('e')">2</div>
-        <div class="key" onclick="insertSymbol('i')">3</div>
-        <div class="key" onclick="insertSymbol('o')">4</div>
-        <div class="key" onclick="insertSymbol('u')">5</div>
-        <div class="key" onclick="insertSymbol('s')">6</div>
-        <div class="key" onclick="insertSymbol('t')">7</div>
-        <div class="key" onclick="insertSymbol('d')">8</div>
-        <div class="key" onclick="insertSymbol('n')">9</div>
-        <div class="key" onclick="insertSymbol('0')">0</div>
-    </div>
-    <button onclick="copyText()">コピー</button>
+textarea {
+	width:100%;
+	height:100%;
+	padding:10pt;
+	font-size:24pt;
+	font-family:arial, sans-serif;
+}
 
-    <script>
-        const ipaSymbols = {
-            'a': 'a', // 例: '1' -> 'ɑ'
-          　'a': 'ɑ', // 例: '1' -> 'ɑ
-            'a': 'ɒ', // 例: '1' -> 'ɑ
-            'a': 'æ', // 例: '1' -> 'ɑ
-            'a': 'ɐ', // 例: '1' -> 'ɑ
-            'e': 'ɛ',
-            'i': 'ɪ',
-            'o': 'ɔ',
-            'u': 'ʊ',
-            'e': 'ə',
-            't': 'θ',
-            'd': 'ð',
-            's': 'ʃ',
-            'n': 'ŋ'
-            // 必要に応じて他のキーを追加
-        };
+div {
+	text-align:center;
+}
 
-        function insertSymbol(key) {
-            const inputArea = document.getElementById('inputArea');
-            inputArea.value += ipaSymbols[key] || key;
-        }
+ul {
+	padding:0px;
+	margin:0px;
+}
 
-        function copyText() {
-            const inputArea = document.getElementById('inputArea');
-            inputArea.select();
-            document.execCommand('copy');
-            alert('コピーしました');
-        }
-    </script>
-</body>
+a {
+	display:inline-block;
+	padding:5pt 1%;
+	height:100%;
+	width:100%;
+	color:#000000;
+	text-decoration:none;
+}
+
+div > ul > li > a {
+	border-radius:5pt;
+	box-shadow:0pt 1pt #888b8e;
+	background:#ffffff;
+}
+
+div > ul > li > a:hover {
+	background:#abb2bd;
+}
+
+div > ul > li {
+	display:inline-block;
+	border-radius:5pt;
+	margin:4pt 1%;
+	padding:0px;
+}
+
+#main > ul > li, #sub > ul > li {
+	width:8%;
+}
+
+li > ul {
+	display:none;
+	width:auto;
+	padding:3pt;
+	margin:4pt;
+	position:absolute;
+	float:left;
+	background:#ffffff;
+	border-radius:5pt;
+	border:1pt solid #888b8e;
+	box-shadow:0pt 1pt #888b8e;
+	white-space:nowrap;
+}
+
+.first {
+	top:-33pt;
+}
+
+.second {
+	top:2pt;
+}
+
+.third {
+	top:37pt;
+}
+
+.migizume {
+	right:1pt;
+}
+
+li:hover > ul {
+	display:inline-block;
+}
+
+li > ul:after, li > ul > li:after {
+	content:"";
+	clear:both;
+	display:block;
+}
+
+li > ul > li {
+	display:inline-block;
+	margin:2pt 0.2vw;
+	width:6vw;
+}
+
+li > ul > li > a {
+	border-radius:5pt;
+}
+
+li > ul > li > a:hover {
+	background:#007aff;
+	color:#ffffff;
+}
+
+#keybody {
+	position:fixed;
+	bottom:0px;
+	background:#d1d5db;
+}
+
+#keybody, #keybody > div {
+	width:100%;
+}
+
+#shift1, #copy > a, #seimitsu1 > a, #seimitsu2 > a, #kanryaku > a, #bs > a {
+	background:#abb2bd;
+}
+
+#shift, #seimitsu1, #seimitsu2, #kanryaku, #bs {
+	width:8%;
+}
+
+#copy {
+	width:17%;
+	font-size:12pt;
+}
+
+#space {
+	background:#ffffff;
+	width:29%;
+	font-size:12pt;
+}
+
+#sub {
+	display:none;
+}
+
+#shift2 {
+	display:none;
+	background:#ffffff;
+	font-weight:bold;
+}
+
+//-->
+</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+		<!--
+			function ipa(input) {
+				document.inputipa.hyoji.value += input.name;
+			}
+			function bs() {
+				document.inputipa.hyoji.value = document.inputipa.hyoji.value.slice(0, -1);
+			}
+		//-->
+		</script>
+		<form name="inputipa">
+			<textarea id="hyoji" rows="150" cols="300"></textarea>
+			<div id="keybody">
+				<div id="main">
+					<ul>
+						<li><a href="#" name="q" onclick="ipa(this)">q</a>
+							<ul class="first"><li><a href="#" name="q" onclick="ipa(this)">q</a></li><li><a href="#" name="q͡χ" onclick="ipa(this)">q͡χ</a></li></ul>
+						</li><li><a href="#" name="w" onclick="ipa(this)">w</a>
+							<ul class="first"><li><a href="#" name="w" onclick="ipa(this)">w</a></li><li><a href="#" name="ɰ" onclick="ipa(this)">ɰ</a><li><a href="#" name="ʍ" onclick="ipa(this)">ʍ</a></li><li><a href="#" name="ʷ" onclick="ipa(this)">◌ʷ</a></li></ul>
+						</li><li><a href="#" name="e" onclick="ipa(this)">e</a>
+							<ul class="first"><li><a href="#" name="e" onclick="ipa(this)">e</a></li><li><a href="#" name="ɛ" onclick="ipa(this)">ɛ</a></li><li><a href="#" name="ɜ" onclick="ipa(this)">ɜ</a></li><li><a href="#" name="ɞ" onclick="ipa(this)">ɞ</a></li><li><a href="#" name="ə" onclick="ipa(this)">ə</a></li><li><a href="#" name="ɘ" onclick="ipa(this)">ɘ</a></li><li><a href="#" name="ɝ" onclick="ipa(this)">ɝ</a></li><li><a href="#" name="ɚ" onclick="ipa(this)">ɚ</a></li></ul>
+						</li><li><a href="#" name="r" onclick="ipa(this)">r</a>
+							<ul class="first"><li><a href="#" name="r" onclick="ipa(this)">r</a></li><li><a href="#" name="ʁ" onclick="ipa(this)">ʁ</a></li><li><a href="#" name="ɹ" onclick="ipa(this)">ɹ</a></li><li><a href="#" name="ɻ" onclick="ipa(this)">ɻ</a></li><li><a href="#" name="ɾ" onclick="ipa(this)">ɾ</a></li><li><a href="#" name="ɽ" onclick="ipa(this)">ɽ</a></li><li><a href="#" name="ʀ" onclick="ipa(this)">ʀ</a></li><li><a href="#" name="ɺ" onclick="ipa(this)">ɺ</a></li><li><a href="#" name="ɹ̝" onclick="ipa(this)">ɹ̝</a></li></ul>
+						</li><li><a href="#" name="t" onclick="ipa(this)">t</a>
+							<ul class="first migizume"><li><a href="#" name="t" onclick="ipa(this)">t</a></li><li><a href="#" name="ʈ" onclick="ipa(this)">ʈ</a></li><li><a href="#" name="t͡s" onclick="ipa(this)">t͡s</a></li><li><a href="#" name="t͡ʃ" onclick="ipa(this)">t͡ʃ</a></li><li><a href="#" name="ʈ͡ʂ" onclick="ipa(this)">ʈ͡ʂ</a></li><li><a href="#" name="t͡ɕ" onclick="ipa(this)">t͡ɕ</a></li><li><a href="#" name="t͡θ" onclick="ipa(this)">t͡θ</a></li><li><a href="#" name="t͡ɬ" onclick="ipa(this)">t͡ɬ</a></li></ul>
+						</li><li><a href="#" name="y" onclick="ipa(this)">y</a>
+							<ul class="first"><li><a href="#" name="y" onclick="ipa(this)">y</a></li><li><a href="#" name="ʏ" onclick="ipa(this)">ʏ</a></li><li><a href="#" name="ɥ" onclick="ipa(this)">ɥ</a></li><li><a href="#" name="ᶣ" onclick="ipa(this)">◌ᶣ</a></li></ul>
+						</li><li><a href="#" name="u" onclick="ipa(this)">u</a>
+							<ul class="first"><li><a href="#" name="u" onclick="ipa(this)">u</a></li><li><a href="#" name="ʊ" onclick="ipa(this)">ʊ</a></li><li><a href="#" name="ʉ" onclick="ipa(this)">ʉ</a></li><li><a href="#" name="ɯ" onclick="ipa(this)">ɯ</a></li></ul>
+						</li><li><a href="#" name="i" onclick="ipa(this)">i</a>
+							<ul class="first"><li><a href="#" name="i" onclick="ipa(this)">i</a></li><li><a href="#" name="ɪ" onclick="ipa(this)">ɪ</a></li><li><a href="#" name="ɨ" onclick="ipa(this)">ɨ</a></li></ul>
+						</li><li><a href="#" name="o" onclick="ipa(this)">o</a>
+							<ul class="first migizume"><li><a href="#" name="o" onclick="ipa(this)">o</a></li><li><a href="#" name="ɶ" onclick="ipa(this)">ɶ</a></li><li><a href="#" name="œ" onclick="ipa(this)">œ</a></li><li><a href="#" name="ɔ" onclick="ipa(this)">ɔ</a></li><li><a href="#" name="ø" onclick="ipa(this)">ø</a></li><li><a href="#" name="ɵ" onclick="ipa(this)">ɵ</a></li><li><a href="#" name="ɤ" onclick="ipa(this)">ɤ</a></li></ul>
+						</li><li><a href="#" name="p" onclick="ipa(this)">p</a>
+							<ul class="first migizume"><li><a href="#" name="p" onclick="ipa(this)">p</a></li><li><a href="#" name="p͡ɸ" onclick="ipa(this)">p͡ɸ</a></li><li><a href="#" name="p̪͡f" onclick="ipa(this)">p̪͡f</a></li></ul>
+						</li>
+					</ul>
+					<ul>
+						<li><a href="#" name="a" onclick="ipa(this)">a</a>
+							<ul class="second"><li><a href="#" name="a" onclick="ipa(this)">a</a></li><li><a href="#" name="ä" onclick="ipa(this)">ä</a></li><li><a href="#" name="ɒ̈" onclick="ipa(this)">ɒ̈</a></li><li><a href="#" name="ɑ" onclick="ipa(this)">ɑ</a></li><li><a href="#" name="ɒ" onclick="ipa(this)">ɒ</a></li><li><a href="#" name="æ" onclick="ipa(this)">æ</a></li><li><a href="#" name="ɐ" onclick="ipa(this)">ɐ</a></li><li><a href="#" name="ʌ" onclick="ipa(this)">ʌ</a></li></ul>
+						</li><li><a href="#" name="s" onclick="ipa(this)">s</a>
+							<ul class="second"><li><a href="#" name="s" onclick="ipa(this)">s</a></li><li><a href="#" name="ʃ" onclick="ipa(this)">ʃ</a></li><li><a href="#" name="ʂ" onclick="ipa(this)">ʂ</a></li><li><a href="#" name="ʄ" onclick="ipa(this)">ʄ</a></li></ul>
+						</li><li><a href="#" name="d" onclick="ipa(this)">d</a>
+							<ul class="second"><li><a href="#" name="d" onclick="ipa(this)">d</a></li><li><a href="#" name="ɖ" onclick="ipa(this)">ɖ</a></li><li><a href="#" name="d͡z" onclick="ipa(this)">d͡z</a></li><li><a href="#" name="d͡ʒ" onclick="ipa(this)">d͡ʒ</a></li><li><a href="#" name="ɖ͡ʐ" onclick="ipa(this)">ɖ͡ʐ</a></li><li><a href="#" name="d͡ʑ" onclick="ipa(this)">d͡ʑ</a></li><li><a href="#" name="d͡ð" onclick="ipa(this)">d͡ð</a></li><li><a href="#" name="d͡ɮ" onclick="ipa(this)">d͡ɮ</a></li><li><a href="#" name="ɗ" onclick="ipa(this)">ɗ</a></li><li><a href="#" name="ᶑ" onclick="ipa(this)">ᶑ</a></li></ul>
+						</li><li><a href="#" name="f" onclick="ipa(this)">f</a>
+							<ul class="second"><li><a href="#" name="f" onclick="ipa(this)">f</a></li><li><a href="#" name="ɸ" onclick="ipa(this)">ɸ</a></li></ul>
+						</li><li><a href="#" name="ɡ" onclick="ipa(this)">ɡ</a>
+							<ul class="second migizume"><li><a href="#" name="" onclick="ipa(this)">ɡ</a></li><li><a href="#" name="ɢ" onclick="ipa(this)">ɢ</a></li><li><a href="#" name="ɣ" onclick="ipa(this)">ɣ</a></li><li><a href="#" name="ɡ͡ɣ" onclick="ipa(this)">ɡ͡ɣ</a></li><li><a href="#" name="ɠ" onclick="ipa(this)">ɠ</a></li><li><a href="#" name="ʛ" onclick="ipa(this)">ʛ</a></li><li><a href="#" name="ˠ" onclick="ipa(this)">◌ˠ</a></li></ul>
+						</li><li><a href="#" name="h" onclick="ipa(this)">h</a>
+							<ul class="second migizume"><li><a href="#" name="h" onclick="ipa(this)">h</a></li><li><a href="#" name="ħ" onclick="ipa(this)">ħ</a></li><li><a href="#" name="ɦ" onclick="ipa(this)">ɦ</a></li><li><a href="#" name="ʜ" onclick="ipa(this)">ʜ</a></li><li><a href="#" name="ɧ" onclick="ipa(this)">ɧ</a></li><li><a href="#" name="ʰ" onclick="ipa(this)">◌ʰ</a></li></ul>
+						</li><li><a href="#" name="j" onclick="ipa(this)">j</a>
+							<ul class="second migizume"><li><a href="#" name="j" onclick="ipa(this)">j</a></li><li><a href="#" name="ɟ" onclick="ipa(this)">ɟ</a></li><li><a href="#" name="ʝ" onclick="ipa(this)">ʝ</a></li><li><a href="#" name="ɟ͡ʝ" onclick="ipa(this)">ɟ͡ʝ</a></li><li><a href="#" name="ʲ" onclick="ipa(this)">◌ʲ</a></li></ul>
+						</li><li><a href="#" name="k" onclick="ipa(this)">k</a>
+							<ul class="second migizume"><li><a href="#" name="k" onclick="ipa(this)">k</a></li><li><a href="#" name="k͡x" onclick="ipa(this)">k͡x</a></li><li><a href="#" name="ʞ" onclick="ipa(this)">ʞ</a></li></ul>
+						</li><li><a href="#" name="l" onclick="ipa(this)">l</a>
+							<ul class="second migizume"><li><a href="#" name="l" onclick="ipa(this)">l</a></li><li><a href="#" name="ɬ" onclick="ipa(this)">ɬ</a></li><li><a href="#" name="ɮ" onclick="ipa(this)">ɮ</a></li><li><a href="#" name="ɭ" onclick="ipa(this)">ɭ</a></li><li><a href="#" name="ʎ" onclick="ipa(this)">ʎ</a></li><li><a href="#" name="ʟ" onclick="ipa(this)">ʟ</a></li><li><a href="#" name="ɺ" onclick="ipa(this)">ɺ</a></li><li><a href="#" name="ɫ" onclick="ipa(this)">ɫ</a></li><li><a href="#" name="ˡ" onclick="ipa(this)">◌ˡ</a></li></ul>
+						</li>
+					</ul>
+					<ul>
+						<li><a href="#" name="z" onclick="ipa(this)">z</a>
+							<ul class="third"><li><a href="#" name="z" onclick="ipa(this)">z</a></li><li><a href="#" name="ʒ" onclick="ipa(this)">ʒ</a></li><li><a href="#" name="ʐ" onclick="ipa(this)">ʐ</a></li><li><a href="#" name="ʑ" onclick="ipa(this)">ʑ</a></li></ul>
+						</li><li><a href="#" name="x" onclick="ipa(this)">x</a>
+							<ul class="third"><li><a href="#" name="x" onclick="ipa(this)">x</a></li><li><a href="#" name="χ" onclick="ipa(this)">χ</a></li></ul>
+						</li><li><a href="#" name="c" onclick="ipa(this)">c</a>
+							<ul class="third"><li><a href="#" name="c" onclick="ipa(this)">c</a></li><li><a href="#" name="ɕ" onclick="ipa(this)">ɕ</a></li><li><a href="#" name="ç" onclick="ipa(this)">ç</a></li><li><a href="#" name="c͡ç" onclick="ipa(this)">c͡ç</a></li></ul>
+						</li><li><a href="#" name="v" onclick="ipa(this)">v</a>
+							<ul class="third"><li><a href="#" name="v" onclick="ipa(this)">v</a></li><li><a href="#" name="ⱱ" onclick="ipa(this)">ⱱ</a></li></ul>
+						</li><li><a href="#" name="b" onclick="ipa(this)">b</a>
+							<ul class="third"><li><a href="#" name="b" onclick="ipa(this)">b</a></li><li><a href="#" name="β" onclick="ipa(this)">β</a></li><li><a href="#" name="ʙ" onclick="ipa(this)">ʙ</a></li><li><a href="#" name="b͡β" onclick="ipa(this)">b͡β</a></li><li><a href="#" name="b̪͡v" onclick="ipa(this)">b̪͡v</a></li><li><a href="#" name="ɓ" onclick="ipa(this)">ɓ</a></li></ul>
+						</li><li><a href="#" name="n" onclick="ipa(this)">n</a>
+							<ul class="third migizume"><li><a href="#" name="n" onclick="ipa(this)">n</a></li><li><a href="#" name="ɳ" onclick="ipa(this)">ɳ</a></li><li><a href="#" name="ɲ" onclick="ipa(this)">ɲ</a></li><li><a href="#" name="ŋ" onclick="ipa(this)">ŋ</a></li><li><a href="#" name="ɴ" onclick="ipa(this)">ɴ</a></li><li><a href="#" name="ⁿ" onclick="ipa(this)">◌ⁿ</a></li></ul>
+						</li><li><a href="#" name="m" onclick="ipa(this)">m</a>
+							<ul class="third"><li><a href="#" name="m" onclick="ipa(this)">m</a></li><li><a href="#" name="ɱ" onclick="ipa(this)">ɱ</a></li></ul>
+						</li><li><a href="#" name="ʔ" onclick="ipa(this)">ʔ</a>
+							<ul class="third migizume"><li><a href="#" name="ʔ" onclick="ipa(this)">ʔ</a></li><li><a href="#" name="ʡ" onclick="ipa(this)">ʡ</a></li><li><a href="#" name="ʕ" onclick="ipa(this)">ʕ</a></li><li><a href="#" name="ʢ" onclick="ipa(this)">ʢ</a></li><li><a href="#" name="ʡ͡ħ" onclick="ipa(this)">ʡ͡ħ</a></li><li><a href="#" name="ʡ͡ʕ" onclick="ipa(this)">ʡ͡ʕ</a></li><li><a href="#" name="ʔ͡h" onclick="ipa(this)">ʔ͡h</a></li><li><a href="#" name="ˤ" onclick="ipa(this)">◌ˤ</a></li></ul>
+						</li><li><a href="#" name="ǃ" onclick="ipa(this)">ǃ</a>
+							<ul class="third migizume"><li><a href="#" name="ǃ" onclick="ipa(this)">ǃ</a></li><li><a href="#" name="ʘ" onclick="ipa(this)">ʘ</a></li><li><a href="#" name="ǀ" onclick="ipa(this)">ǀ</a></li><li><a href="#" name="ǂ" onclick="ipa(this)">ǂ</a></li><li><a href="#" name="ǁ" onclick="ipa(this)">ǁ</a></li><li><a href="#" name="¡" onclick="ipa(this)">¡</a></li><li><a href="#" name="ʞ" onclick="ipa(this)">ʞ</a></li></ul>
+						</li>
+					</ul>
+				</div>
+				<div id="sub">
+					<ul>
+						<li><a href="#" name="ʼ" onclick="ipa(this)">◌ʼ</a></li><li><a href="#" name="̴" onclick="ipa(this)">◌̴</a></li><li><a href="#" name="̃" onclick="ipa(this)">◌̃</a></li><li><a href="#" name="˞" onclick="ipa(this)">◌˞</a></li><li><a href="#" name="̪" onclick="ipa(this)">◌̪</a></li><li><a href="#" name="̼" onclick="ipa(this)">◌̼</a></li><li><a href="#" name="ˈ" onclick="ipa(this)">ˈ</a>
+							<ul class="first"><li><a href="#" name="ˈ" onclick="ipa(this)">ˈ</a></li><li><a href="#" name="ˌ" onclick="ipa(this)">ˌ</a></li></ul>
+						</li><li><a href="#" name="ː" onclick="ipa(this)">ː</a>
+							<ul class="first"><li><a href="#" name="ː" onclick="ipa(this)">ː</a></li><li><a href="#" name="ˑ" onclick="ipa(this)">ˑ</a></li></ul>
+						</li><li><a href="#" name="͡" onclick="ipa(this)">◌͡◌</a></li><li><a href="#" name="˥" onclick="ipa(this)">˥</a>
+							<ul class="first migizume"><li><a href="#" name="˥" onclick="ipa(this)">˥</a></li><li><a href="#" name="˦" onclick="ipa(this)">˦</a></li><li><a href="#" name="˧" onclick="ipa(this)">˧</a></li><li><a href="#" name="˨" onclick="ipa(this)">˨</a></li><li><a href="#" name="˩" onclick="ipa(this)">˩</a></li></ul>
+						</li>
+					</ul>
+					<ul>
+						<li><a href="#" name="̟" onclick="ipa(this)">◌̟</a>
+							<ul class="second"><li><a href="#" name="̟" onclick="ipa(this)">◌̟</a></li><li><a href="#" name="̠" onclick="ipa(this)">◌̠</a></li><li><a href="#" name="̈" onclick="ipa(this)">◌̈</a></li><li><a href="#" name="̽" onclick="ipa(this)">◌̽</a></li></ul>
+						</li><li><a href="#" name="̝" onclick="ipa(this)">◌̝</a>
+							<ul class="second"><li><a href="#" name="̝" onclick="ipa(this)">◌̝</a></li><li><a href="#" name="˔" onclick="ipa(this)">◌˔</a></li><li><a href="#" name="̞" onclick="ipa(this)">◌̞</a></li><li><a href="#" name="˕" onclick="ipa(this)">◌˕</a></li></ul>
+						</li><li><a href="#" name="̹" onclick="ipa(this)">◌̹</a>
+							<ul class="second"><li><a href="#" name="̹" onclick="ipa(this)">◌̹</a></li><li><a href="#" name="̜" onclick="ipa(this)">◌̜</a></li></ul>
+						</li><li><a href="#" name="̘" onclick="ipa(this)">◌̘</a>
+							<ul class="second"><li><a href="#" name="̘" onclick="ipa(this)">◌̘</a></li><li><a href="#" name="̙" onclick="ipa(this)">◌̙</a></li></ul>
+						</li><li><a href="#" name="̺" onclick="ipa(this)">◌̺</a></li><li><a href="#" name="̻" onclick="ipa(this)">◌̻</a></li><li><a href="#" name="̆" onclick="ipa(this)">◌̆</a></li><li><a href="#" name="." onclick="ipa(this)">.</a></li><li><a href="#" name="̋" onclick="ipa(this)">◌̋</a>
+							<ul class="second migizume"><li><a href="#" name="̋" onclick="ipa(this)">◌̋</a></li><li><a href="#" name="́" onclick="ipa(this)">◌́</a></li><li><a href="#" name="̄" onclick="ipa(this)">◌̄</a></li><li><a href="#" name="̀" onclick="ipa(this)">◌̀</a></li><li><a href="#" name="̏" onclick="ipa(this)">◌̏</a></li></ul>
+						</li><li><a href="#" name="̌" onclick="ipa(this)">◌̌</a>
+							<ul class="second migizume"><li><a href="#" name="̌" onclick="ipa(this)">◌̌</a></li><li><a href="#" name="̂" onclick="ipa(this)">◌̂</a></li><li><a href="#" name="᷄" onclick="ipa(this)">◌᷄</a></li><li><a href="#" name="᷇" onclick="ipa(this)">◌᷇</a></li><li><a href="#" name="᷈" onclick="ipa(this)">◌᷈</a></li></ul>
+						</li>
+					</ul>
+					<ul>
+						<li><a href="#" name="̩" onclick="ipa(this)">◌̩</a>
+							<ul class="third"><li><a href="#" name="̩" onclick="ipa(this)">◌̩</a></li><li><a href="#" name="̯" onclick="ipa(this)">◌̯</a></li></ul>
+						</li><li><a href="#" name="̚" onclick="ipa(this)">◌̚</a></li><li><a href="#" name="̤" onclick="ipa(this)">◌̤</a></li><li><a href="#" name="̰" onclick="ipa(this)">◌̰</a></li><li><a href="#" name="̥" onclick="ipa(this)">◌̥</a></li><li><a href="#" name="̬" onclick="ipa(this)">◌̬</a></li><li><a href="#" name="|" onclick="ipa(this)">|</a>
+							<ul class="third"><li><a href="#" name="|" onclick="ipa(this)">|</a></li><li><a href="#" name="‖" onclick="ipa(this)">‖</a></li></ul>
+						</li><li><a href="#" name="‿" onclick="ipa(this)">◌‿◌</a></li><li><a href="#" name="ꜛ" onclick="ipa(this)">ꜛ</a>
+							<ul class="third migizume"><li><a href="#" name="ꜛ" onclick="ipa(this)">ꜛ</a></li><li><a href="#" name="ꜜ" onclick="ipa(this)">ꜜ</a></li></ul>
+						</li><li><a href="#" name="↗" onclick="ipa(this)">↗</a>
+							<ul class="third migizume"><li><a href="#" name="↗" onclick="ipa(this)">↗</a></li><li><a href="#" name="↘" onclick="ipa(this)">↘</a></li></ul>
+						</li>
+					</ul>
+				</div>
+				<div id="tool">
+					<ul>
+						<li id="shift"><a href="#" id="shift1" onclick="sub_view(); return false;">⇑</a><a href="#" id="shift2" onclick="sub_hide(); return false;">⇑</a></li><li id="copy"><a href="#" id="copy1">copy</a></li><li id="space"><a href="#" name=" " onclick="ipa(this)">space</a></li><li id="seimitsu1"><a href="#" name="[" onclick="ipa(this)">[</a></li><li id="seimitsu2"><a href="#" name="]" onclick="ipa(this)">]</a></li><li id="kanryaku"><a href="#" name="/" onclick="ipa(this)">/</a></li><li id="bs"><a href="#" onclick="bs()">⇐</a></li>
+					</ul>
+				</div>
+			</div>
+		</form>
+		<script language="JavaScript" type="text/javascript">
+		<!--
+			var elem_1 = document.getElementById("main");
+			var elem_2 = document.getElementById("sub");
+			var elem_3 = document.getElementById("shift1");
+			var elem_4 = document.getElementById("shift2");
+			function sub_view() {
+				elem_1.style.display = "none";
+				elem_2.style.display = "block";
+				elem_3.style.display = "none";
+				elem_4.style.display = "inline-block";
+			}
+			function sub_hide() {
+				elem_1.style.display = "block";
+				elem_2.style.display = "none";
+				elem_3.style.display = "inline-block";
+				elem_4.style.display = "none";
+			}
+		//-->
+		</script>
+		<script language="JavaScript" type="text/javascript">
+		<!--
+			function execCopy(string) {
+				var temp = document.createElement('div');
+				temp.appendChild(document.createElement('pre')).textContent = string;
+				
+				var s = temp.style;
+				s.position = 'fixed';
+				s.left = '-100%';
+				
+				document.body.appendChild(temp);
+				document.getSelection().selectAllChildren(temp);
+				
+				var result = document.execCommand('copy');
+				document.body.removeChild(temp);
+				return result; //trueなら実行できている falseなら失敗か対応していない
+			}
+			var textarea = document.getElementById('hyoji');
+			var button = document.getElementById('copy1');
+			button.onclick = function() {
+				if(execCopy(textarea.value)){
+					alert('コピーしました。');
+				} else {
+					alert('コピーできませんでした。\nブラウザが非対応か、内容が空の可能性があります。');
+				}
+			};
+		//-->
+		</script>
+	</body>
 </html>
